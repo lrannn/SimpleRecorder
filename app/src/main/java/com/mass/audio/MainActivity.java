@@ -5,12 +5,12 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mass.audio.library.model.OnByteBufferDataChangeListener;
 import com.mass.audio.library.Recorder;
+import com.mass.audio.library.model.OnShortBufferDataChangeListener;
 
-import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 
-public class MainActivity extends AppCompatActivity implements OnByteBufferDataChangeListener {
+public class MainActivity extends AppCompatActivity implements OnShortBufferDataChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
     }
 
     @Override
-    public void onDataChange(int position, ByteBuffer byteBuffer) {
+    public void onDataChange(int position, ShortBuffer byteBuffer) {
 
     }
 }
