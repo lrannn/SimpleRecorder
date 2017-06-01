@@ -13,13 +13,13 @@ import java.nio.ShortBuffer;
 /**
  * YmAudioRecorder是个进行了简单封装的AudioRecor使用类，传入对应的参数和回调接口即可快速进行录音
  */
-public class YmAudioRecorder {
+public class Recorder {
 
     private AudioRecord mAudioRecord;
     private ByteBuffer byteBuffer;
     private ShortBuffer shortBuffer;
 
-    private YmAudioRecorder() {
+    private Recorder() {
     }
 
     /**
@@ -31,13 +31,13 @@ public class YmAudioRecorder {
      * @param l           处理完sample的回调
      * @param listener    读取完数据的回调
      */
-    public YmAudioRecorder(int samplerate,
-                           int channel,
-                           int format,
-                           int audioSource,
-                           int period,
-                           final OnPeriodInFramesChangeListener l,
-                           final IBufferDataChangeInterface listener) {
+    public Recorder(int samplerate,
+                    int channel,
+                    int format,
+                    int audioSource,
+                    int period,
+                    final OnPeriodInFramesChangeListener l,
+                    final IBufferDataChangeInterface listener) {
         int minBufferSize = AudioRecord.getMinBufferSize(samplerate, channel, format);
         mAudioRecord = new AudioRecord(audioSource, samplerate, channel, format, minBufferSize);
         mAudioRecord.setPositionNotificationPeriod(period);
