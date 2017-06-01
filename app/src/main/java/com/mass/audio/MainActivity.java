@@ -22,18 +22,18 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
 
     public static final String TEST_FILE_PATH = Environment.getExternalStorageDirectory() + "/test.pcm";
 
-    private ImageButton imageBtn;
+    private ImageButton mImageButton;
 
     private Recorder mRecorder;
-    private FileOutputStream fileOutputStream;
+    private FileOutputStream mStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageBtn = (ImageButton) findViewById(R.id.action_image);
-        imageBtn.setOnClickListener(new View.OnClickListener() {
+        mImageButton = (ImageButton) findViewById(R.id.action_image);
+        mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mRecorder == null) {
@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
             }
         });
 
-        boolean b = testFile();
-        if (!b) {
+        boolean result = createOutputFile();
+        if (!result) {
             Toast.makeText(this, "创建文件失败~", Toast.LENGTH_SHORT).show();
         }
 
@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
 
     }
 
-    private boolean testFile() {
+    private boolean createOutputFile() {
         try {
-            fileOutputStream = new FileOutputStream(new File(TEST_FILE_PATH));
+            mStream = new FileOutputStream(new File(TEST_FILE_PATH));
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
     @Override
     public void onDataChange(int position, ByteBuffer byteBuffer) {
         try {
-            if (fileOutputStream != null) {
-                fileOutputStream.write(byteBuffer.array());
+            if (mStream != null) {
+                mStream.write(byteBuffer.array());
             }
         } catch (IOException e) {
             e.printStackTrace();
