@@ -112,6 +112,10 @@ public class Recorder {
         mAudioRecord.stop();
     }
 
+    public boolean isRecording() {
+        return mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING;
+    }
+
 
     private int read(byte[] data) {
         int read = mAudioRecord.read(data, 0, data.length);
