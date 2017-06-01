@@ -93,7 +93,7 @@ public class Recorder {
                     ((OnShortBufferDataChangeListener) listener).onDataChange(position, shortBuffer);
                 } else {
                     int position = read(byteBuffer.array());
-                    listener.onDataChange(position, byteBuffer);
+                    ((OnByteBufferDataChangeListener) listener).onDataChange(position, byteBuffer);
                 }
 
             }

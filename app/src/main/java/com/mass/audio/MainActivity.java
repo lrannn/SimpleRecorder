@@ -17,8 +17,13 @@ public class MainActivity extends AppCompatActivity implements OnShortBufferData
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Recorder record = new Recorder(44100, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT,
-                MediaRecorder.AudioSource.MIC, 512, null, this);
+        Recorder record = new Recorder(44100,
+                AudioFormat.CHANNEL_IN_MONO/*单双声道*/,
+                AudioFormat.ENCODING_PCM_16BIT/*格式*/,
+                MediaRecorder.AudioSource.MIC/*AudioSource*/,
+                512/*period*/,
+                null/**/,
+                this/*onDataChangeListener*/);
 
         record.startRecording();
 

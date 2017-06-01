@@ -8,5 +8,6 @@ import java.nio.ByteBuffer;
 
 public interface OnByteBufferDataChangeListener extends IBufferDataChangeInterface<ByteBuffer> {
 
-
+    @Override
+    void onDataChange(int position, ByteBuffer byteBuffer);
 }
