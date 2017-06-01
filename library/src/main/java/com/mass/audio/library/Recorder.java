@@ -1,5 +1,5 @@
 /*
- * Copyright lrannn
+ * Copyright (C) lrannn
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 
 import com.mass.audio.library.model.IBufferDataChangeInterface;
-import com.mass.audio.library.model.OnByteDataChangeListener;
+import com.mass.audio.library.model.OnByteBufferDataChangeListener;
 import com.mass.audio.library.model.OnShortBufferDataChangeListener;
 
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 
 /**
- * YmAudioRecorder是个进行了简单封装的AudioRecor使用类，传入对应的参数和回调接口即可快速进行录音
+ * Recorder是个进行了简单封装的AudioRecor使用类，传入对应的参数和回调接口即可快速进行录音
  */
 public class Recorder {
 
@@ -38,6 +38,11 @@ public class Recorder {
     }
 
     /**
+     * 构造方法传入采样率和回调接口，如果你是8Bit的数据，那么必须要用{@link OnByteBufferDataChangeListener}
+     * 来进行回调。如果你是16Bit的数据，可以使用{@link OnByteBufferDataChangeListener}或者{@link OnShortBufferDataChangeListener}
+     * 来进行回调，只不过一个传出去的是byteBuffer，一个是shortBuffer,请注意，当你使用ByteBuffer的时候，
+     * byteBuffer的大小是period的两倍，取数据的时候请注意大小
+     *
      * @param samplerate  采样率
      * @param channel     声道属性，参考:{@link AudioFormat}
      * @param format      位深度，参考{@link AudioFormat}
@@ -57,7 +62,7 @@ public class Recorder {
         mAudioRecord = new AudioRecord(audioSource, samplerate, channel, format, minBufferSize);
         mAudioRecord.setPositionNotificationPeriod(period);
         if (isEncodingPCM16Bit()) {
-            if (listener instanceof OnByteDataChangeListener) {
+            if (listener instanceof OnByteBufferDataChangeListener) {
                 byteBuffer = ByteBuffer.allocate(period * 2);
             } else {
                 shortBuffer = ShortBuffer.allocate(period);
@@ -106,6 +111,7 @@ public class Recorder {
             return;
         mAudioRecord.stop();
     }
+
 
     private int read(byte[] data) {
         int read = mAudioRecord.read(data, 0, data.length);

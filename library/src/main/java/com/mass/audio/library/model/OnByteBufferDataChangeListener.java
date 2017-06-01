@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
  * Created by lrannn on 2017/6/1.
  */
 
-public interface OnByteDataChangeListener extends IBufferDataChangeInterface<ByteBuffer> {
+public interface OnByteBufferDataChangeListener extends IBufferDataChangeInterface<ByteBuffer> {
 
 
 }
