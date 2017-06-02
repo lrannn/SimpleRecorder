@@ -29,3 +29,32 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 }
+
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'audio-record'
+
+    publishedGroupId = 'com.mass.audio.library'
+    libraryName = 'Recorder'
+    artifact = 'audio-record'
+
+    libraryDescription = 'Simple audio recorder in Android'
+
+    siteUrl ='https://github.com/lrannn/SimpleRecorder'
+    gitUrl = 'https://github.com/lrannn/SimpleRecorder.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'lrannn'
+    developerName = 'Lrannn'
+    developerEmail = 'lran7master@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

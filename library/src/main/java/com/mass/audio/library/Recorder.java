@@ -1,5 +1,5 @@
 /*
- * Copyright (C) lrannn 
+ * Copyright (C) lrannn
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,12 +43,12 @@ public class Recorder {
      * 来进行回调，只不过一个传出去的是byteBuffer，一个是shortBuffer,请注意，当你使用ByteBuffer的时候，
      * byteBuffer的大小是period的两倍，取数据的时候请注意大小
      *
-     * @param samplerate  采样率
+     * @param samplerate  采样率，常用为44100，48000
      * @param channel     声道属性，参考:{@link AudioFormat}
      * @param format      位深度，参考{@link AudioFormat}
      * @param audioSource 输入源 {@link android.media.MediaRecorder.AudioSource}
-     * @param period      每次处理多少sample
-     * @param l           处理完sample的回调
+     * @param period      处理sample数量
+     * @param l           处理完period大小sample的回调
      * @param listener    读取完数据的回调
      */
     public Recorder(int samplerate,
@@ -91,7 +91,7 @@ public class Recorder {
                 if (listener instanceof OnShortBufferDataChangeListener) {
                     int position = read(shortBuffer.array());
                     ((OnShortBufferDataChangeListener) listener).onDataChange(position, shortBuffer);
-                } else {
+                } else if (listener instanceof OnByteBufferDataChangeListener) {
                     int position = read(byteBuffer.array());
                     ((OnByteBufferDataChangeListener) listener).onDataChange(position, byteBuffer);
                 }
