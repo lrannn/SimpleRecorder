@@ -32,7 +32,7 @@ dependencies {
 
 
 ext {
-    bintrayRepo = 'maven'
+    bintrayRepo = 'lrannn'
     bintrayName = 'audio-record'
 
     publishedGroupId = 'com.mass.audio.library'
