@@ -60,9 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
                 AudioFormat.ENCODING_PCM_16BIT/*格式*/,
                 MediaRecorder.AudioSource.MIC/*AudioSource*/,
                 512/*period*/,
-                null/**/,
                 this/*onDataChangeListener*/);
-
 
     }
 

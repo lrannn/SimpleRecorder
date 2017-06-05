@@ -34,6 +34,9 @@ public class Recorder {
     private ByteBuffer byteBuffer;
     private ShortBuffer shortBuffer;
 
+
+    private OnPeriodInFramesChangeListener l;
+
     private Recorder() {
     }
 
@@ -48,7 +51,6 @@ public class Recorder {
      * @param format      位深度，参考{@link AudioFormat}
      * @param audioSource 输入源 {@link android.media.MediaRecorder.AudioSource}
      * @param period      处理sample数量
-     * @param l           处理完period大小sample的回调
      * @param listener    读取完数据的回调
      */
     public Recorder(int samplerate,
@@ -56,7 +58,6 @@ public class Recorder {
                     int format,
                     int audioSource,
                     int period,
-                    final OnPeriodInFramesChangeListener l,
                     final IBufferDataChangeInterface listener) {
         int minBufferSize = AudioRecord.getMinBufferSize(samplerate, channel, format);
         mAudioRecord = new AudioRecord(audioSource, samplerate, channel, format, minBufferSize);
@@ -116,6 +117,10 @@ public class Recorder {
         return mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING;
     }
 
+    public void setOnPeriodInFramesChangeListener(OnPeriodInFramesChangeListener listener) {
+        l = listener;
+    }
+
 
     private int read(byte[] data) {
         int read = mAudioRecord.read(data, 0, data.length);
@@ -139,7 +144,7 @@ public class Recorder {
     /**
      * 当走完设定的period*frame的时候调用
      */
-    interface OnPeriodInFramesChangeListener {
+    public interface OnPeriodInFramesChangeListener {
         void onFrames(AudioRecord record);
     }
 
