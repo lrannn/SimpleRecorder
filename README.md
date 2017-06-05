@@ -4,6 +4,11 @@
 
 ### 用法
 
+在module/build.gradle里添加
+```
+compile 'com.mass.audio.library:library:0.1.0'
+```
+
 需要自己申请权限，别忘了在AndroidManifest.xml添加
 ```
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
