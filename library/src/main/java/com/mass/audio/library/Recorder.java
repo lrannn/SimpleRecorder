@@ -113,6 +113,10 @@ public class Recorder {
         mAudioRecord.stop();
     }
 
+    public void release() {
+        mAudioRecord.release();
+    }
+
     public boolean isRecording() {
         return mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING;
     }
@@ -123,13 +127,11 @@ public class Recorder {
 
 
     private int read(byte[] data) {
-        int read = mAudioRecord.read(data, 0, data.length);
-        return read;
+        return mAudioRecord.read(data, 0, data.length);
     }
 
     private int read(short[] data) {
-        int read = mAudioRecord.read(data, 0, data.length);
-        return read;
+        return mAudioRecord.read(data, 0, data.length);
     }
 
     /**
