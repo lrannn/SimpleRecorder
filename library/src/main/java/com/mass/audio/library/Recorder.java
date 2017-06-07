@@ -70,7 +70,7 @@ public class Recorder {
             }
         } else {
             if (listener instanceof OnShortBufferDataChangeListener) {
-                throw new IllegalArgumentException("Audio format is pcm 16 bit, so you only use OnByteBufferDataChangeListener!");
+                throw new IllegalArgumentException("Audio format is pcm 8 bit, so you only use OnByteBufferDataChangeListener!");
             }
             byteBuffer = ByteBuffer.allocate(period);
         }
