@@ -6,7 +6,7 @@
 
 在module/build.gradle里添加
 ```
-compile 'com.mass.audio.library:library:0.1.0'
+compile 'com.mass.audio.library:library:0.1.1'
 ```
 
 需要自己申请权限，别忘了在AndroidManifest.xml添加
