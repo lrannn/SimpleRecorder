@@ -21,11 +21,15 @@ import java.nio.ByteBuffer;
 public class MainActivity extends AppCompatActivity implements OnByteBufferDataChangeListener {
 
     public static final String TEST_FILE_PATH = Environment.getExternalStorageDirectory() + "/test.pcm";
+    private static final int NUM_SAMPLES = 512;
+
 
     private ImageButton mImageButton;
 
     private Recorder mRecorder;
     private FileOutputStream mStream;
+
+    private byte[] output;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,9 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
                 AudioFormat.CHANNEL_IN_MONO/*单双声道*/,
                 AudioFormat.ENCODING_PCM_16BIT/*格式*/,
                 MediaRecorder.AudioSource.MIC/*AudioSource*/,
-                512/*period*/,
+                NUM_SAMPLES/*period*/,
                 this/*onDataChangeListener*/);
+        output = new byte[NUM_SAMPLES * 2];
 
     }
 
@@ -75,13 +80,26 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
     }
 
     @Override
-    public void onDataChange(int position, ByteBuffer byteBuffer) {
+    public void onDataChange(int position, ByteBuffer buffer) {
         try {
             if (mStream != null) {
-                mStream.write(byteBuffer.array());
+                mStream.write(buffer.array());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 适用于小端在前的short转换成byte
+     *
+     * @param value 16位short值
+     * @return byte[]数组
+     */
+    private byte[] short2byte(short value) {
+        byte[] data = new byte[2];
+        data[0] = (byte) (value & 0xFF);
+        data[1] = (byte) ((value >> 8) & 0xFF);
+        return data;
     }
 }
