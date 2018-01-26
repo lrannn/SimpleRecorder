@@ -35,7 +35,7 @@ public class Recorder {
     private ShortBuffer shortBuffer;
 
 
-    private OnPeriodInFramesChangeListener l;
+    private OnPeriodInFramesChangeListener mListener;
 
     private Recorder() {
     }
@@ -43,8 +43,8 @@ public class Recorder {
     /**
      * 构造方法传入采样率和回调接口，如果你是8Bit的数据，那么必须要用{@link OnByteBufferDataChangeListener}
      * 来进行回调。如果你是16Bit的数据，可以使用{@link OnByteBufferDataChangeListener}或者{@link OnShortBufferDataChangeListener}
-     * 来进行回调，只不过一个传出去的是byteBuffer，一个是shortBuffer,请注意，当你使用ByteBuffer的时候，
-     * byteBuffer的大小是period的两倍，取数据的时候请注意大小
+     * 来进行回调，只不过一个传出去的是byteBuffer，一个是shortBuffer
+     * 请注意，当你使用ByteBuffer的时候，byteBuffer的大小是period的两倍，取数据的时候请注意大小
      *
      * @param samplerate  采样率，常用为44100，48000
      * @param channel     声道属性，参考:{@link AudioFormat}
@@ -53,11 +53,7 @@ public class Recorder {
      * @param period      处理sample数量
      * @param listener    读取完数据的回调
      */
-    public Recorder(int samplerate,
-                    int channel,
-                    int format,
-                    int audioSource,
-                    int period,
+    public Recorder(int samplerate, int channel, int format, int audioSource, int period,
                     final IBufferDataChangeInterface listener) {
         int minBufferSize = AudioRecord.getMinBufferSize(samplerate, channel, format);
         mAudioRecord = new AudioRecord(audioSource, samplerate, channel, format, minBufferSize);
@@ -70,7 +66,7 @@ public class Recorder {
             }
         } else {
             if (listener instanceof OnShortBufferDataChangeListener) {
-                throw new IllegalArgumentException("Audio format is pcm 8 bit, so you only use OnByteBufferDataChangeListener!");
+                throw new IllegalArgumentException("Audio format is pcm 8 bit, so you only use OnByteBufferDataChangeListener!!");
             }
             byteBuffer = ByteBuffer.allocate(period);
         }
@@ -82,8 +78,8 @@ public class Recorder {
 
             @Override
             public void onPeriodicNotification(AudioRecord recorder) {
-                if (l != null)
-                    l.onFrames(recorder);
+                if (mListener != null)
+                    mListener.onFrames(recorder);
 
                 if (listener == null) {
                     return;
@@ -102,14 +98,15 @@ public class Recorder {
     }
 
     public void startRecording() {
-        if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)
-            return;
+        if (!isInitialized()) {
+            throw new IllegalArgumentException("AudioRecorder state is uninitialized.");
+        }
+        if (mAudioRecord.getRecordingState() != AudioRecord.RECORDSTATE_STOPPED) return;
         mAudioRecord.startRecording();
     }
 
     public void stop() {
-        if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_STOPPED)
-            return;
+        if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) return;
         mAudioRecord.stop();
     }
 
@@ -121,10 +118,13 @@ public class Recorder {
         return mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING;
     }
 
-    public void setOnPeriodInFramesChangeListener(OnPeriodInFramesChangeListener listener) {
-        l = listener;
+    public boolean isInitialized() {
+        return mAudioRecord.getState() == AudioRecord.STATE_INITIALIZED;
     }
 
+    public void setOnPeriodInFramesChangeListener(OnPeriodInFramesChangeListener listener) {
+        mListener = listener;
+    }
 
     private int read(byte[] data) {
         return mAudioRecord.read(data, 0, data.length);

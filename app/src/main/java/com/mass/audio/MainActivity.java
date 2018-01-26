@@ -1,7 +1,9 @@
 package com.mass.audio;
 
+import android.Manifest;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -21,8 +23,12 @@ import java.nio.ByteBuffer;
 public class MainActivity extends AppCompatActivity implements OnByteBufferDataChangeListener {
 
     public static final String TEST_FILE_PATH = Environment.getExternalStorageDirectory() + "/test.pcm";
+    private static final int REQUEST_CODE = 0x01;
     private static final int NUM_SAMPLES = 512;
-
+    private static final String[] perms = {
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     private ImageButton mImageButton;
 
@@ -36,11 +42,15 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (Build.VERSION.SDK_INT >= 23) {
+            requestPermissions(perms, REQUEST_CODE);
+        }
+
         mImageButton = (ImageButton) findViewById(R.id.action_image);
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRecorder == null) {
+                if (mRecorder == null || !mRecorder.isInitialized()) {
                     return;
                 }
                 boolean recording = mRecorder.isRecording();
@@ -65,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
                 MediaRecorder.AudioSource.MIC/*AudioSource*/,
                 NUM_SAMPLES/*period*/,
                 this/*onDataChangeListener*/);
+
         output = new byte[NUM_SAMPLES * 2];
 
     }
@@ -77,6 +88,12 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mRecorder.release();
+        super.onDestroy();
     }
 
     @Override
