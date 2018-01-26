@@ -22,20 +22,20 @@ import java.nio.ByteBuffer;
 
 public class MainActivity extends AppCompatActivity implements OnByteBufferDataChangeListener {
 
-    public static final String TEST_FILE_PATH = Environment.getExternalStorageDirectory() + "/test.pcm";
+    //要保存的文件路径，后缀为.pcm，需要用专业的软件打开，如果想保存成wav文件需要在前44个字节写入相应数据
+    private static final String TEST_FILE_PATH = Environment.getExternalStorageDirectory() + "/test.pcm";
+    // 请求权限的标识代码
     private static final int REQUEST_CODE = 0x01;
+    // 一次处理多少个SAMPLE
     private static final int NUM_SAMPLES = 512;
+
     private static final String[] perms = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private ImageButton mImageButton;
-
     private Recorder mRecorder;
     private FileOutputStream mStream;
-
-    private byte[] output;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
             requestPermissions(perms, REQUEST_CODE);
         }
 
-        mImageButton = (ImageButton) findViewById(R.id.action_image);
+        ImageButton mImageButton = (ImageButton) findViewById(R.id.action_image);
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements OnByteBufferDataC
                 MediaRecorder.AudioSource.MIC/*AudioSource*/,
                 NUM_SAMPLES/*period*/,
                 this/*onDataChangeListener*/);
-
-        output = new byte[NUM_SAMPLES * 2];
 
     }
 

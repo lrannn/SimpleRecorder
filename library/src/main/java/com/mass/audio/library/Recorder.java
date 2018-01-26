@@ -23,6 +23,7 @@ import com.mass.audio.library.model.OnByteBufferDataChangeListener;
 import com.mass.audio.library.model.OnShortBufferDataChangeListener;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 
 /**
@@ -69,6 +70,7 @@ public class Recorder {
                 throw new IllegalArgumentException("Audio format is pcm 8 bit, so you only use OnByteBufferDataChangeListener!!");
             }
             byteBuffer = ByteBuffer.allocate(period);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
         }
         mAudioRecord.setRecordPositionUpdateListener(new AudioRecord.OnRecordPositionUpdateListener() {
             @Override
@@ -106,7 +108,7 @@ public class Recorder {
     }
 
     public void stop() {
-        if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) return;
+        if (mAudioRecord.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) return;
         mAudioRecord.stop();
     }
 
